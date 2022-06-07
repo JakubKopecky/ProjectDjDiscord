@@ -3,7 +3,8 @@ package bot
 import (
 	"fmt"
 
-	"github.com/JakubKopecky/ProjectDjDiscord/config"
+	"ProjectDjDiscord/config"
+
 	"github.com/bwmarrin/discordgo"
 )
 

@@ -1,4 +1,4 @@
-module github.com/JakubKopecky/ProjectDjDiscord
+module ProjectDjDiscord
 
 go 1.18
 

@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/JakubKopecky/ProjectDjDiscord/bot"
-	"github.com/JakubKopecky/ProjectDjDiscord/config"
+	"ProjectDjDiscord/bot"
+	"ProjectDjDiscord/config"
 )
 
 func main() {
