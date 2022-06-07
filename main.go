@@ -1,21 +1,34 @@
 package main
 
 import (
-	"fmt"
-
 	"ProjectDjDiscord/bot"
 	"ProjectDjDiscord/config"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
-	err := config.ReadConfig()
+	config := config.LoadConfig()
 
+	botSession, err := bot.NewBot(config)
 	if err != nil {
-		fmt.Print(err.Error())
-		return
+		log.Fatal(err.Error())
 	}
 
-	bot.Start()
+	err = botSession.Start()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
-	<-make(chan struct{})
+	waitForInterrupt()
+
+	botSession.Close()
+}
+
+func waitForInterrupt() {
+	sc := make(chan os.Signal, 1)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
+	<-sc
 }

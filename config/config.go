@@ -2,42 +2,26 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
+	"log"
 )
 
-var (
-	Token     string
-	BotPrefix string
-
-	config *configStruct
-)
-
-type configStruct struct {
-	Token     string `json:"Token"`
-	BotPrefix string `json:"BotPrefix"`
+type ConfigStruct struct {
+	Token string `json:"Token"`
 }
 
-func ReadConfig() error {
-	fmt.Println("Reading config file...")
+func LoadConfig() *ConfigStruct {
+	log.Print("Reading config file...")
 	file, err := ioutil.ReadFile("./config.json")
-
 	if err != nil {
-		fmt.Println(err.Error())
-		return err
+		log.Fatal(err.Error())
 	}
 
-	fmt.Println(string(file))
-	err = json.Unmarshal(file, &config)
-
+	var loadedConfig = ConfigStruct{}
+	err = json.Unmarshal(file, &loadedConfig)
 	if err != nil {
-		fmt.Println(err.Error())
-		return err
+		log.Fatal(err.Error())
 	}
 
-	Token = config.Token
-	BotPrefix = config.BotPrefix
-
-	return nil
-
+	return &loadedConfig
 }

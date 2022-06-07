@@ -1,48 +1,45 @@
 package bot
 
 import (
-	"fmt"
-
 	"ProjectDjDiscord/config"
+	"log"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-var (
-	BotId string
-)
+type botStruct struct {
+	botSession *discordgo.Session
+}
 
-func Start() {
-	goBot, err := discordgo.New("Bot " + config.Token)
-
+func NewBot(config *config.ConfigStruct) (*botStruct, error) {
+	botSession, err := discordgo.New("Bot " + config.Token)
 	if err != nil {
-		fmt.Println(err.Error())
-		return
+		return nil, err
 	}
 
-	u, err := goBot.User("@me")
+	botSession.AddHandler(messageHandler)
 
+	return &botStruct{botSession: botSession}, nil
+}
+
+func (bot *botStruct) Start() error {
+	err := bot.botSession.Open()
 	if err != nil {
-		fmt.Println(err.Error())
-		return
+		return err
 	}
 
-	BotId = u.ID
+	log.Print("Bot is running!")
 
-	goBot.AddHandler(messageHandler)
+	return nil
+}
 
-	err = goBot.Open()
-
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-
-	fmt.Println("Bot is running!")
+func (bot *botStruct) Close() {
+	log.Print("Closing bot...")
+	bot.botSession.Close()
 }
 
 func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if m.Author.ID == BotId {
+	if s.State.User.ID == m.Author.ID {
 		return
 	}
 
