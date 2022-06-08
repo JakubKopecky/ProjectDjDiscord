@@ -7,7 +7,8 @@ import (
 )
 
 type ConfigStruct struct {
-	Token string `json:"Token"`
+	Token     string `json:"Token"`
+	BotPrefix string `json:"BotPrefix"`
 }
 
 func LoadConfig() *ConfigStruct {

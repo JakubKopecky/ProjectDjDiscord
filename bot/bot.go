@@ -7,11 +7,16 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+var (
+	currentConfig *config.ConfigStruct
+)
+
 type botStruct struct {
 	botSession *discordgo.Session
 }
 
 func NewBot(config *config.ConfigStruct) (*botStruct, error) {
+	currentConfig = config
 	botSession, err := discordgo.New("Bot " + config.Token)
 	if err != nil {
 		return nil, err
@@ -36,14 +41,4 @@ func (bot *botStruct) Start() error {
 func (bot *botStruct) Close() {
 	log.Print("Closing bot...")
 	bot.botSession.Close()
-}
-
-func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if s.State.User.ID == m.Author.ID {
-		return
-	}
-
-	if m.Content == "ping" {
-		_, _ = s.ChannelMessageSend(m.ChannelID, "pong")
-	}
 }
